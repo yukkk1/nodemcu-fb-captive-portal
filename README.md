@@ -8,7 +8,7 @@ Based on https://github.com/125K/ESP8266-Captive-Portal
   <tr>
     <th>SSID of the network being displayed</th>
     <th>After clicking on the network the page is displayed to the user</th> 
-    <th>The user fills in the form and submits</th>
+    <th>The user fills the form and submits</th>
     <th>The actor can access the captured information by visiting `172.0.0.1/log` </th>
   </tr>
     <td><img src="https://i.ibb.co/G5mzL75/29-DE89-C2-21-D1-4-FD7-A82-C-D9-A023-FCD645.jpg"></td>
