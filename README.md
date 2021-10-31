@@ -19,8 +19,8 @@ Based on https://github.com/125K/ESP8266-Captive-Portal
 </table>
 
 ## References:
-https://github.com/125K/ESP8266-Captive-Portal
-https://github.com/wifiphisher/wifiphisher
-https://www.embarcados.com.br/spiffs-o-sistema-de-arquivos-do-esp8266-32/
+- https://github.com/125K/ESP8266-Captive-Portal
+- https://github.com/wifiphisher/wifiphisher
+- https://www.embarcados.com.br/spiffs-o-sistema-de-arquivos-do-esp8266-32/
 
 :brazil:
