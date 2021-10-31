@@ -1,0 +1,20 @@
+
+<!-- [START] log.html -->
+<div id="credentials">
+	<h3>Credentials Captured</h3>
+	<ul></ul>
+</div>
+
+<script>
+	var list = document.querySelector("div#credentials > ul");
+
+	for(let item of data.split("\n"))
+	{
+		let node = document.createElement("li");
+		let textnode = document.createTextNode(item);
+		node.appendChild(textnode);
+		list.appendChild(node);
+	}
+
+</script>
+<!-- [END] log.html -->
